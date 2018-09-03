@@ -1,0 +1,91 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.svg.min.js"></script> 
+    </head>
+    <body>
+
+        <script type="text/javascript">
+
+            var svg;
+            var items = [];
+
+            $(document).ready(function () {
+                $("#svgload").svg({
+                    onLoad: function ()
+                    {
+                        svg = $("#svgload").svg('get');
+                        svg.load('svg/7only1200x1200_style3.svg', {addTo: true, changeSize: false});
+
+
+
+                    },
+                    settings: {}}
+                );
+
+
+                $('#btnTest').click(function (e) {
+                    $(this).hide();
+                    var i = 0;
+                    $("svg path").first().remove();
+                    $("svg path, svg polygon").each(function () {
+                        var x = Math.round(Math.random() * 1000 - 500);
+                        var y = Math.round(Math.random() * 1000 - 500);
+                        var a = Math.round(Math.random() * 360);
+                        $(this).attr('transform', 'translate(' + x + ' ' + y + ') rotate(' + a + ')').data("x", x).data("y", y).data("a", a);
+                        items[i] = [$(this), x, y, a];
+                        i++;
+                        //if (i == 1) {
+                        /*
+                         $(this).css({"min-height": y, "left": x, "right": a}).animate(
+                         {"min-height": 0, "left": 0, "right": 0}, 
+                         {duration: 1000,
+                         step: function (v, fx) {
+                         //console.log(fx.prop);    
+                         
+                         if (fx.prop === "min-height"){
+                         $(this).data("y", v);
+                         }
+                         if (fx.prop === "left"){
+                         $(this).data("x", v);
+                         }
+                         
+                         if (fx.prop === "right"){
+                         $(this).data("a", v);
+                         }
+                         $(this).attr("transform", "translate(" + $(this).data("x") + "," + $(this).data("y") + ") rotate(" + $(this).data("a") + ")");
+                         }
+                         });*/
+                        // }
+                    });
+                    var step = 1;
+                    var step2 = 1;
+                    interval = setInterval(function () {
+                        $.each(items, function (i) {
+                            for (var j = 1; j < 3; j++) {
+                                items[i][j] = (items[i][j] <= step) ? 0 : ((items[i][j] > 0) ? (items[i][j] - step) : (items[i][j] + step));
+                            }
+                            items[i][3] = (items[i][3] <= step2) ? 0 : ((items[i][3] > 0) ? (items[i][3] - step2) : (items[i][3] + step2));
+                            items[i][0].attr('transform', 'translate(' + items[i][1] + ' ' + items[i][2] + ') rotate(' + items[i][3] + ')');
+                        });
+                    }, 1);
+
+
+
+                });
+
+            });
+        </script>   
+
+        <div id="svgload" style="width: 100%; height: 1000px;"></div>
+
+        <div id="btnTest" style="position: absolute; right:0;top:0;bottom:0;left:0;padding:10px;border:1px solid #333;background: tomato;width:100px;height:20px;margin:auto;color:#fff;cursor:pointer;text-align: center;border-radius:100px">
+            Click Me!
+        </div>
+
+    </body>
+</html>
